@@ -122,7 +122,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-bold"
+                android:fontFamily="sans-serif-medium"
                 android:text="Add Contact"
                 android:textStyle="bold"
                 android:textColor="@color/white"
@@ -280,3 +280,4 @@
                 android:layout_marginTop="4dp"/>
         </LinearLayout>
     </LinearLayout>
+</RelativeLayout>

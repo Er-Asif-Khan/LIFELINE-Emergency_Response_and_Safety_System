@@ -283,7 +283,6 @@ public class SafetyGuideActivity extends AppCompatActivity {
         navSettings.setOnClickListener(v -> {
             // Already on Safety Guide
         });
-        });
     }
 
     private void updateTabs(TextView selectedTab) {
