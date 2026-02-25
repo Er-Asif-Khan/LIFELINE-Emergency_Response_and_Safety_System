@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/light_home_background"
-    android:fitsSystemWindows="true">
+    android:background="@color/light_home_background">
 
     <!-- Top Bar -->
     <RelativeLayout
@@ -49,7 +48,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/topBar"
-        android:layout_above="@+id/bottomNav"
+        android:layout_above="@+id/infoText"
         android:fillViewport="true">
 
         <FrameLayout
@@ -96,7 +95,7 @@
         android:id="@+id/addContactButton"
         android:layout_width="190dp"
         android:layout_height="wrap_content"
-        android:layout_above="@id/bottomNav"
+        android:layout_above="@+id/bottomNav"
         android:layout_alignParentEnd="true"
         android:layout_margin="16dp"
         android:layout_marginTop="16dp"
@@ -122,7 +121,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-medium"
+                android:fontFamily="sans-serif-bold"
                 android:text="Add Contact"
                 android:textStyle="bold"
                 android:textColor="@color/white"
@@ -130,7 +129,7 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-    <!-- Bottom Navigation -->
+    <!-- Bottom Navigation (copied from activity_alert_history for consistency) -->
     <LinearLayout
         android:id="@+id/bottomNav"
         android:layout_width="match_parent"
@@ -187,6 +186,7 @@
                 android:text="History"
                 android:textColor="#9CA3AF"
                 android:textSize="12sp"
+                android:fontFamily="sans-serif-medium"
                 android:layout_marginTop="4dp"/>
         </LinearLayout>
 
@@ -257,7 +257,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/navSettings"
+            android:id="@+id/navSafety"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"

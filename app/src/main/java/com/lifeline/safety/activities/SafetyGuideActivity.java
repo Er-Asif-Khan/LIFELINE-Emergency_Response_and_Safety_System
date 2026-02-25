@@ -4,10 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,7 +32,6 @@ public class SafetyGuideActivity extends AppCompatActivity {
 
     private TextView tabAll, tabFirstAid, tabFireSafety, tabDisaster;
     private ImageView backButton;
-    private CardView emergencyButton;
     private EditText searchEditText;
 
     @Override
@@ -50,7 +48,6 @@ public class SafetyGuideActivity extends AppCompatActivity {
     private void initializeViews() {
         backButton = findViewById(R.id.backButton);
         recyclerSafety = findViewById(R.id.recyclerSafety);
-        emergencyButton = findViewById(R.id.emergencyButton);
         searchEditText = findViewById(R.id.searchEditText);
 
         tabAll = findViewById(R.id.tabAll);
@@ -214,12 +211,6 @@ public class SafetyGuideActivity extends AppCompatActivity {
     private void setupClickListeners() {
         backButton.setOnClickListener(v -> finish());
 
-        emergencyButton.setOnClickListener(v -> {
-            // Trigger SOS or go to home
-            startActivity(new Intent(this, HomeActivity.class));
-            finish();
-        });
-
         tabAll.setOnClickListener(v -> {
             updateTabs(tabAll);
             filterCategories("all");
@@ -254,35 +245,17 @@ public class SafetyGuideActivity extends AppCompatActivity {
         });
 
         // Bottom navigation
-        LinearLayout navHome = findViewById(R.id.navHome);
-        LinearLayout navHistory = findViewById(R.id.navHistory);
-        RelativeLayout navSOS = findViewById(R.id.navSOS);
-        LinearLayout navContacts = findViewById(R.id.navContacts);
-        LinearLayout navSettings = findViewById(R.id.navSettings);
+        View navHome = findViewById(R.id.navHome);
+        View navHistory = findViewById(R.id.navHistory);
+        View navSOS = findViewById(R.id.navSOS);
+        View navContacts = findViewById(R.id.navContacts);
+        View navSafety = findViewById(R.id.navSafety);
 
-        navHome.setOnClickListener(v -> {
-            startActivity(new Intent(this, HomeActivity.class));
-            finish();
-        });
-
-        navHistory.setOnClickListener(v -> {
-            startActivity(new Intent(this, AlertHistoryActivity.class));
-            finish();
-        });
-
-        navSOS.setOnClickListener(v -> {
-            startActivity(new Intent(this, HomeActivity.class));
-            finish();
-        });
-
-        navContacts.setOnClickListener(v -> {
-            startActivity(new Intent(this, ViewContactsActivity.class));
-            finish();
-        });
-
-        navSettings.setOnClickListener(v -> {
-            // Already on Safety Guide
-        });
+        navHome.setOnClickListener(v -> startActivity(new Intent(this, HomeActivity.class)));
+        navHistory.setOnClickListener(v -> startActivity(new Intent(this, AlertHistoryActivity.class)));
+        navSOS.setOnClickListener(v -> startActivity(new Intent(this, HomeActivity.class)));
+        navContacts.setOnClickListener(v -> startActivity(new Intent(this, ViewContactsActivity.class)));
+        navSafety.setOnClickListener(v -> { /* Already on this screen */ });
     }
 
     private void updateTabs(TextView selectedTab) {

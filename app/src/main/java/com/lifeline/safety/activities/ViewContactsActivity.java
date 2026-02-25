@@ -81,35 +81,17 @@ public class ViewContactsActivity extends AppCompatActivity {
         addContactButton.setOnClickListener(v -> startActivity(new Intent(this, AddContactActivity.class)));
 
         // Bottom navigation
-        LinearLayout navHome = findViewById(R.id.navHome);
-        LinearLayout navHistory = findViewById(R.id.navHistory);
-        RelativeLayout navSOS = findViewById(R.id.navSOS);
-        LinearLayout navContacts = findViewById(R.id.navContacts);
-        LinearLayout navSettings = findViewById(R.id.navSettings);
+        View navHome = findViewById(R.id.navHome);
+        View navHistory = findViewById(R.id.navHistory);
+        View navSOS = findViewById(R.id.navSOS);
+        View navContacts = findViewById(R.id.navContacts);
+        View navSafety = findViewById(R.id.navSafety);
 
-        navHome.setOnClickListener(v -> {
-            startActivity(new Intent(this, HomeActivity.class));
-            finish();
-        });
-
-        navHistory.setOnClickListener(v -> {
-            startActivity(new Intent(this, AlertHistoryActivity.class));
-            finish();
-        });
-
-        navSOS.setOnClickListener(v -> {
-            startActivity(new Intent(this, HomeActivity.class));
-            finish();
-        });
-
-        navContacts.setOnClickListener(v -> {
-            // Already on Contacts
-        });
-
-        navSettings.setOnClickListener(v -> {
-            startActivity(new Intent(this, SafetyGuideActivity.class));
-            finish();
-        });
+        navHome.setOnClickListener(v -> startActivity(new Intent(this, HomeActivity.class)));
+        navHistory.setOnClickListener(v -> startActivity(new Intent(this, AlertHistoryActivity.class)));
+        navSOS.setOnClickListener(v -> startActivity(new Intent(this, HomeActivity.class)));
+        navContacts.setOnClickListener(v -> { /* Already on this screen */ });
+        navSafety.setOnClickListener(v -> startActivity(new Intent(this, SafetyGuideActivity.class)));
     }
 
     private void openSettings() {

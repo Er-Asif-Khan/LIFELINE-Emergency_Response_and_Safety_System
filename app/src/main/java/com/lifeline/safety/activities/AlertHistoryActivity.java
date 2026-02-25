@@ -32,7 +32,7 @@ public class AlertHistoryActivity extends AppCompatActivity {
         LinearLayout navHistory = findViewById(R.id.navHistory);
         RelativeLayout navSOS = findViewById(R.id.navSOS);
         LinearLayout navContacts = findViewById(R.id.navContacts);
-        LinearLayout navSettings = findViewById(R.id.navSettings);
+        LinearLayout navSafety = findViewById(R.id.navSafety);
 
         // Back button click
         backButton.setOnClickListener(v -> finish());
@@ -67,34 +67,12 @@ public class AlertHistoryActivity extends AppCompatActivity {
             // TODO: Filter and update adapter
         });
 
-        // Bottom navigation clicks
-        navHome.setOnClickListener(v -> {
-            // Navigate to Home
-            startActivity(new Intent(this, HomeActivity.class));
-            finish();
-        });
-
-        navHistory.setOnClickListener(v -> {
-            // Already on History - do nothing
-        });
-
-        navSOS.setOnClickListener(v -> {
-            // Trigger SOS
-            startActivity(new Intent(this, HomeActivity.class));
-            finish();
-        });
-
-        navContacts.setOnClickListener(v -> {
-            // Navigate to Contacts
-            startActivity(new Intent(this, ViewContactsActivity.class));
-            finish();
-        });
-
-        navSettings.setOnClickListener(v -> {
-            // Navigate to Safety Guide
-            startActivity(new Intent(this, SafetyGuideActivity.class));
-            finish();
-        });
+        // Bottom navigation clicks (avoid recreating current activity)
+        navHome.setOnClickListener(v -> startActivity(new Intent(this, HomeActivity.class)));
+        navHistory.setOnClickListener(v -> { /* Already on this screen */ });
+        navSOS.setOnClickListener(v -> startActivity(new Intent(this, HomeActivity.class)));
+        navSafety.setOnClickListener(v -> startActivity(new Intent(this, SafetyGuideActivity.class)));
+        navContacts.setOnClickListener(v -> startActivity(new Intent(this, ViewContactsActivity.class)));
     }
 
     private void updateFilterTabs(TextView selected, TextView... others) {

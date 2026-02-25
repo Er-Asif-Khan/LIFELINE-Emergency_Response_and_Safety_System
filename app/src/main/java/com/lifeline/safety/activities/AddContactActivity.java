@@ -63,38 +63,6 @@ public class AddContactActivity extends AppCompatActivity {
         btnBack.setOnClickListener(v -> finish());
         btnImportContacts.setOnClickListener(v -> importFromContacts());
         btnSaveContact.setOnClickListener(v -> saveContact());
-
-        // Bottom navigation
-        LinearLayout navHome = findViewById(R.id.navHome);
-        LinearLayout navHistory = findViewById(R.id.navHistory);
-        RelativeLayout navSOS = findViewById(R.id.navSOS);
-        LinearLayout navContacts = findViewById(R.id.navContacts);
-        LinearLayout navSettings = findViewById(R.id.navSettings);
-
-        navHome.setOnClickListener(v -> {
-            startActivity(new Intent(this, HomeActivity.class));
-            finish();
-        });
-
-        navHistory.setOnClickListener(v -> {
-            startActivity(new Intent(this, AlertHistoryActivity.class));
-            finish();
-        });
-
-        navSOS.setOnClickListener(v -> {
-            startActivity(new Intent(this, HomeActivity.class));
-            finish();
-        });
-
-        navContacts.setOnClickListener(v -> {
-            startActivity(new Intent(this, ViewContactsActivity.class));
-            finish();
-        });
-
-        navSettings.setOnClickListener(v -> {
-            startActivity(new Intent(this, SafetyGuideActivity.class));
-            finish();
-        });
     }
     private void importFromContacts() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)
