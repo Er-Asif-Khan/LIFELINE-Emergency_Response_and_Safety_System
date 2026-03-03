@@ -43,7 +43,7 @@
             android:name=".activities.HomeActivity"
             android:exported="true" />
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".activities.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

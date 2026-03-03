@@ -19,12 +19,14 @@ public class CircularProgressView extends View {
     private Paint progressPaint;
     private Paint backgroundPaint;
     private Paint glowPaint;
+    private Paint glowPaint2;
+    private Paint glowPaint3;
     private RectF rectF;
 
     private float progress = 0f; // 0 to 100
     private int progressColor = 0xFFFF3B30; // Default red
     private int backgroundColor = 0x33FF3B30; // Default light red
-    private float strokeWidth = 20f;
+    private float strokeWidth = 25f;
 
     private ValueAnimator progressAnimator;
 
@@ -82,12 +84,26 @@ public class CircularProgressView extends View {
         backgroundPaint.setStyle(Paint.Style.STROKE);
         backgroundPaint.setStrokeWidth(strokeWidth);
 
-        // Glow paint
+        // Glow paint - outer glow (largest)
         glowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         glowPaint.setColor(progressColor);
         glowPaint.setStyle(Paint.Style.STROKE);
-        glowPaint.setStrokeWidth(strokeWidth + 30);
-        glowPaint.setAlpha(30);
+        glowPaint.setStrokeWidth(strokeWidth + 40);
+        glowPaint.setAlpha(20);
+
+        // Glow paint 2 - middle glow
+        glowPaint2 = new Paint(Paint.ANTI_ALIAS_FLAG);
+        glowPaint2.setColor(progressColor);
+        glowPaint2.setStyle(Paint.Style.STROKE);
+        glowPaint2.setStrokeWidth(strokeWidth + 20);
+        glowPaint2.setAlpha(40);
+
+        // Glow paint 3 - inner glow
+        glowPaint3 = new Paint(Paint.ANTI_ALIAS_FLAG);
+        glowPaint3.setColor(progressColor);
+        glowPaint3.setStyle(Paint.Style.STROKE);
+        glowPaint3.setStrokeWidth(strokeWidth + 8);
+        glowPaint3.setAlpha(60);
 
         rectF = new RectF();
     }
@@ -109,8 +125,10 @@ public class CircularProgressView extends View {
                 height / 2f + radius
         );
 
-        // Glow
-        canvas.drawCircle(width / 2f, height / 2f, radius + 15, glowPaint);
+        // Draw multiple glow layers for enhanced effect
+        canvas.drawCircle(width / 2f, height / 2f, radius + 35, glowPaint);
+        canvas.drawCircle(width / 2f, height / 2f, radius + 20, glowPaint2);
+        canvas.drawCircle(width / 2f, height / 2f, radius + 8, glowPaint3);
 
         // Background circle
         canvas.drawCircle(width / 2f, height / 2f, radius, backgroundPaint);
@@ -151,7 +169,9 @@ public class CircularProgressView extends View {
         this.strokeWidth = width;
         progressPaint.setStrokeWidth(width);
         backgroundPaint.setStrokeWidth(width);
-        glowPaint.setStrokeWidth(width + 30);
+        glowPaint.setStrokeWidth(width + 40);
+        glowPaint2.setStrokeWidth(width + 20);
+        glowPaint3.setStrokeWidth(width + 8);
         invalidate();
     }
 
@@ -159,6 +179,8 @@ public class CircularProgressView extends View {
         this.progressColor = color;
         progressPaint.setColor(color);
         glowPaint.setColor(color);
+        glowPaint2.setColor(color);
+        glowPaint3.setColor(color);
         invalidate();
     }
 

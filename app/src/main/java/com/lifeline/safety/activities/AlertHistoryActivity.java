@@ -67,12 +67,26 @@ public class AlertHistoryActivity extends AppCompatActivity {
             // TODO: Filter and update adapter
         });
 
-        // Bottom navigation clicks (avoid recreating current activity)
-        navHome.setOnClickListener(v -> startActivity(new Intent(this, HomeActivity.class)));
-        navHistory.setOnClickListener(v -> { /* Already on this screen */ });
-        navSOS.setOnClickListener(v -> startActivity(new Intent(this, HomeActivity.class)));
-        navSafety.setOnClickListener(v -> startActivity(new Intent(this, SafetyGuideActivity.class)));
-        navContacts.setOnClickListener(v -> startActivity(new Intent(this, ViewContactsActivity.class)));
+        // Bottom navigation clicks
+        navHome.setOnClickListener(v -> {
+            startActivity(new Intent(this, HomeActivity.class));
+        });
+
+        navHistory.setOnClickListener(v -> {
+            startActivity(new Intent(this, AlertHistoryActivity.class));
+        });
+
+        navSOS.setOnClickListener(v -> {
+            startActivity(new Intent(this, HomeActivity.class));
+        });
+
+        navSafety.setOnClickListener(v -> {
+            startActivity(new Intent(this, SafetyGuideActivity.class));
+        });
+
+        navContacts.setOnClickListener(v -> {
+            startActivity(new Intent(this, ViewContactsActivity.class));
+        });
     }
 
     private void updateFilterTabs(TextView selected, TextView... others) {

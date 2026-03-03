@@ -90,7 +90,7 @@ public class ViewContactsActivity extends AppCompatActivity {
         navHome.setOnClickListener(v -> startActivity(new Intent(this, HomeActivity.class)));
         navHistory.setOnClickListener(v -> startActivity(new Intent(this, AlertHistoryActivity.class)));
         navSOS.setOnClickListener(v -> startActivity(new Intent(this, HomeActivity.class)));
-        navContacts.setOnClickListener(v -> { /* Already on this screen */ });
+        navContacts.setOnClickListener(v -> startActivity(new Intent(this, ViewContactsActivity.class)));
         navSafety.setOnClickListener(v -> startActivity(new Intent(this, SafetyGuideActivity.class)));
     }
 

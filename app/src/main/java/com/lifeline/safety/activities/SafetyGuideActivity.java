@@ -255,7 +255,7 @@ public class SafetyGuideActivity extends AppCompatActivity {
         navHistory.setOnClickListener(v -> startActivity(new Intent(this, AlertHistoryActivity.class)));
         navSOS.setOnClickListener(v -> startActivity(new Intent(this, HomeActivity.class)));
         navContacts.setOnClickListener(v -> startActivity(new Intent(this, ViewContactsActivity.class)));
-        navSafety.setOnClickListener(v -> { /* Already on this screen */ });
+        navSafety.setOnClickListener(v -> startActivity(new Intent(this, SafetyGuideActivity.class)));
     }
 
     private void updateTabs(TextView selectedTab) {

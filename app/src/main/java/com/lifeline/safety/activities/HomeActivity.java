@@ -11,6 +11,12 @@ import android.view.View;
 import android.widget.*;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.graphics.Bitmap;
+import android.renderscript.Allocation;
+import android.renderscript.Element;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlur;
+import android.graphics.drawable.BitmapDrawable;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -47,6 +53,7 @@ public class HomeActivity extends AppCompatActivity {
     private AlertDialog countdownDialog;
 
     private static final int COUNTDOWN_SECONDS = 5;
+    private ImageView blurView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -176,6 +183,95 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     /**
+     * Apply blur effect to the background
+     */
+    private void applyBlurEffect() {
+        try {
+            // Get the root view
+            View rootView = getWindow().getDecorView().getRootView();
+            rootView.setDrawingCacheEnabled(true);
+            Bitmap bitmap = Bitmap.createBitmap(rootView.getDrawingCache());
+            rootView.setDrawingCacheEnabled(false);
+
+            // Blur the bitmap with higher radius for glass effect
+            Bitmap blurredBitmap = blurBitmap(bitmap, 25); // Use max allowed radius for strong blur
+
+            // Create a full-screen overlay with blurred background
+            blurView = new ImageView(this);
+            blurView.setImageBitmap(blurredBitmap);
+            blurView.setAlpha(0.8f); // 80% blur effect
+
+            // Add a full black overlay for maximum dimming
+            blurView.setBackgroundColor(0xCC000000); // 80% black
+
+            // Add blur view to the window, full screen
+            ((ViewGroup) getWindow().getDecorView()).addView(blurView, new ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+            ));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Remove blur effect
+     */
+    private void removeBlurEffect() {
+        if (blurView != null && blurView.getParent() != null) {
+            ((ViewGroup) blurView.getParent()).removeView(blurView);
+            blurView = null;
+        }
+    }
+
+    /**
+     * Blur bitmap using RenderScript
+     */
+    private Bitmap blurBitmap(Bitmap bitmap, float radius) {
+        try {
+            // Create a smaller version for faster blur
+            Bitmap input = Bitmap.createScaledBitmap(bitmap, 
+                    (int)(bitmap.getWidth() / 1.5f), 
+                    (int)(bitmap.getHeight() / 1.5f), 
+                    true);
+
+            Bitmap output = Bitmap.createBitmap(input);
+
+            RenderScript rs = RenderScript.create(this);
+            Allocation allocationIn = Allocation.createFromBitmap(rs, input);
+            Allocation allocationOut = Allocation.createFromBitmap(rs, output);
+
+            ScriptIntrinsicBlur scriptIntrinsicBlur = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
+            scriptIntrinsicBlur.setRadius(Math.min(radius, 25f)); // Limit radius to 25
+            scriptIntrinsicBlur.setInput(allocationIn);
+            scriptIntrinsicBlur.forEach(allocationOut);
+
+            allocationOut.copyTo(output);
+
+            if (allocationIn != null) {
+                allocationIn.destroy();
+            }
+            if (allocationOut != null) {
+                allocationOut.destroy();
+            }
+            if (scriptIntrinsicBlur != null) {
+                scriptIntrinsicBlur.destroy();
+            }
+            if (rs != null) {
+                rs.destroy();
+            }
+
+            input.recycle();
+            bitmap.recycle();
+
+            return output;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return bitmap;
+        }
+    }
+
+    /**
      * Handle SOS button tap
      */
     private void handleSOSClick() {
@@ -261,30 +357,43 @@ public class HomeActivity extends AppCompatActivity {
 
         countdownDialog.show();
 
+        // Apply blur effect to background
+        applyBlurEffect();
+
+        // Set initial progress to 0
+        circularProgress.setProgress(0);
+        tvCountdown.setText(String.valueOf(COUNTDOWN_SECONDS));
+
         // Start countdown
-        sosCountdown = new CountDownTimer(COUNTDOWN_SECONDS * 1000L, 1000) {
+        sosCountdown = new CountDownTimer(COUNTDOWN_SECONDS * 1000L, 100) {
             int secondsLeft = COUNTDOWN_SECONDS;
+            int totalTicks = COUNTDOWN_SECONDS * 10; // 10 ticks per second (100ms intervals)
+            int currentTick = 0;
 
             @Override
             public void onTick(long millisUntilFinished) {
-                tvCountdown.setText(String.valueOf(secondsLeft));
+                currentTick++;
+                
+                // Update display only when second changes
+                int secondsLeftNow = (int) Math.ceil(millisUntilFinished / 1000.0);
+                if (secondsLeftNow != secondsLeft) {
+                    secondsLeft = secondsLeftNow;
+                    tvCountdown.setText(String.valueOf(secondsLeft));
+                }
 
-                // Animate circular progress
-                float progressPercentage = ((COUNTDOWN_SECONDS - secondsLeft + 1) * 100f) / COUNTDOWN_SECONDS;
-                circularProgress.animateProgress(progressPercentage, 1000);
-
-                secondsLeft--;
+                // Animate circular progress smoothly
+                float progressPercentage = (currentTick * 100f) / totalTicks;
+                circularProgress.setProgress(progressPercentage);
             }
 
             @Override
             public void onFinish() {
+                tvCountdown.setText("0");
+                circularProgress.setProgress(100);
                 cleanupCountdown();
                 triggerSOS();
             }
         }.start();
-
-        // Set initial progress to 0
-        circularProgress.setProgress(0);
 
         // Cancel button click
         btnCancel.setOnClickListener(v -> {
@@ -353,6 +462,7 @@ public class HomeActivity extends AppCompatActivity {
             countdownDialog.dismiss();
             countdownDialog = null;
         }
+        removeBlurEffect();
         resetSOSUI();
     }
 
