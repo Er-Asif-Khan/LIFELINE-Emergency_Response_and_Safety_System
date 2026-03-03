@@ -21,6 +21,7 @@ import android.graphics.drawable.BitmapDrawable;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.cardview.widget.CardView;
 import androidx.core.view.WindowCompat;
@@ -52,7 +53,7 @@ public class HomeActivity extends AppCompatActivity {
     private CountDownTimer sosCountdown;
     private AlertDialog countdownDialog;
 
-    private static final int COUNTDOWN_SECONDS = 5;
+    private int countdownSeconds = 5;
     private ImageView blurView;
 
     @Override
@@ -61,9 +62,18 @@ public class HomeActivity extends AppCompatActivity {
         WindowCompat.setDecorFitsSystemWindows(getWindow(), true);
         setContentView(R.layout.activity_home);
 
+        applyThemeFromPrefs();
         initializeViews();
         setupShakeDetection();
         setupClickListeners();
+    }
+
+    private void applyThemeFromPrefs() {
+        boolean dark = getSharedPreferences("lifeline_prefs", MODE_PRIVATE)
+                .getBoolean("dark_mode", false);
+        AppCompatDelegate.setDefaultNightMode(
+                dark ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO
+        );
     }
 
     private void initializeViews() {
@@ -81,6 +91,10 @@ public class HomeActivity extends AppCompatActivity {
 
         // Settings Icon
         settingsIcon = findViewById(R.id.settingsIcon);
+
+        // Load countdown from preferences
+        countdownSeconds = getSharedPreferences("lifeline_prefs", MODE_PRIVATE)
+                .getInt("countdown_seconds", 5);
     }
 
     private void setupShakeDetection() {
@@ -157,17 +171,20 @@ public class HomeActivity extends AppCompatActivity {
         );
 
         // Settings Icon
-        settingsIcon.setOnClickListener(v -> {
-            // Open settings activity or show settings dialog
-            Toast.makeText(this, "Settings coming soon", Toast.LENGTH_SHORT).show();
-            // startActivity(new Intent(this, SettingsActivity.class));
-        });
+        settingsIcon.setOnClickListener(v ->
+                startActivity(new Intent(this, SettingsActivity.class)));
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        applyThemeFromPrefs();
+
+        // Refresh latest settings when coming back from SettingsActivity
         shakeEnabled = isShakeEnabled();
+        countdownSeconds = getSharedPreferences("lifeline_prefs", MODE_PRIVATE)
+                .getInt("countdown_seconds", 5);
+
         if (shakeEnabled && shakeDetector != null && PermissionManager.hasSOSPermissions(this)) {
             shakeDetector.start();
         }
@@ -276,12 +293,11 @@ public class HomeActivity extends AppCompatActivity {
      */
     private void handleSOSClick() {
         if (sosArmed) return;
-
         sosArmed = true;
         sosButton.setAlpha(0.85f);
         sosButton.setEnabled(false);
         vibrateWarning();
-
+        ensureLocationEnabled(); // <-- Ensure location is enabled before proceeding
         if (PermissionManager.hasSOSPermissions(this)) {
             startSOSCountdown();
         } else if (PermissionManager.shouldShowRationale(this)) {
@@ -362,12 +378,12 @@ public class HomeActivity extends AppCompatActivity {
 
         // Set initial progress to 0
         circularProgress.setProgress(0);
-        tvCountdown.setText(String.valueOf(COUNTDOWN_SECONDS));
+        tvCountdown.setText(String.valueOf(countdownSeconds));
 
         // Start countdown
-        sosCountdown = new CountDownTimer(COUNTDOWN_SECONDS * 1000L, 100) {
-            int secondsLeft = COUNTDOWN_SECONDS;
-            int totalTicks = COUNTDOWN_SECONDS * 10; // 10 ticks per second (100ms intervals)
+        sosCountdown = new CountDownTimer(countdownSeconds * 1000L, 100) {
+            int secondsLeft = countdownSeconds;
+            int totalTicks = countdownSeconds * 10; // 10 ticks per second (100ms intervals)
             int currentTick = 0;
 
             @Override
@@ -516,6 +532,31 @@ public class HomeActivity extends AppCompatActivity {
     private boolean isShakeEnabled() {
         return getSharedPreferences("lifeline_prefs", MODE_PRIVATE)
                 .getBoolean("shake_sos", false);
+    }
+
+    private void ensureLocationEnabled() {
+        android.location.LocationManager lm = (android.location.LocationManager) getSystemService(LOCATION_SERVICE);
+        boolean gpsEnabled = false;
+        boolean networkEnabled = false;
+        try {
+            gpsEnabled = lm.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER);
+        } catch (Exception ignored) {}
+        try {
+            networkEnabled = lm.isProviderEnabled(android.location.LocationManager.NETWORK_PROVIDER);
+        } catch (Exception ignored) {}
+        if (!gpsEnabled && !networkEnabled) {
+            // Prompt user to enable location
+            new AlertDialog.Builder(this)
+                .setTitle("Enable Location")
+                .setMessage("Location is required for SOS. Please enable location services.")
+                .setCancelable(false)
+                .setPositiveButton("Enable", (d, w) -> {
+                    Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(intent);
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+        }
     }
 
     @Override

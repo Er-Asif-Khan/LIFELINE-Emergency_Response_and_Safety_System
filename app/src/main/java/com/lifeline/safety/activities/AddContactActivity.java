@@ -24,6 +24,7 @@ public class AddContactActivity extends AppCompatActivity {
     private static final int PERMISSION_READ_CONTACTS = 100;
     private MaterialButton btnImportContacts, btnSaveContact;
     private ImageView btnBack;
+    private ImageView settingsButton;
     private TextInputEditText etFullName, etPhoneNumber;
     private DatabaseHelper db;
     private ActivityResultLauncher<Intent> pickContactLauncher;
@@ -40,6 +41,7 @@ public class AddContactActivity extends AppCompatActivity {
     }
     private void initializeViews() {
         btnBack = findViewById(R.id.btnBack);
+        settingsButton = findViewById(R.id.settingsButton);
         btnImportContacts = findViewById(R.id.btnImportContacts);
         etFullName = findViewById(R.id.etFullName);
         etPhoneNumber = findViewById(R.id.etPhoneNumber);
@@ -61,6 +63,8 @@ public class AddContactActivity extends AppCompatActivity {
     }
     private void setupClickListeners() {
         btnBack.setOnClickListener(v -> finish());
+        settingsButton.setOnClickListener(v ->
+                startActivity(new Intent(this, SettingsActivity.class)));
         btnImportContacts.setOnClickListener(v -> importFromContacts());
         btnSaveContact.setOnClickListener(v -> saveContact());
     }

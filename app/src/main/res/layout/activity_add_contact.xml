@@ -38,6 +38,16 @@
                 android:textSize="20sp"
                 android:fontFamily="sans-serif-medium"
                 android:textStyle="bold"/>
+
+            <ImageView
+                android:id="@+id/settingsButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_settings"
+                android:padding="12dp"
+                android:background="?attr/selectableItemBackgroundBorderless" />
         </RelativeLayout>
 
         <!-- Divider Line -->

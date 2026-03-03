@@ -40,6 +40,9 @@
             android:name=".activities.AddContactActivity"
             android:exported="false" />
         <activity
+            android:name=".activities.SettingsActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.HomeActivity"
             android:exported="true" />
         <activity

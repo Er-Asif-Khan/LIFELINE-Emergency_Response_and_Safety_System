@@ -19,6 +19,7 @@ public class AlertHistoryActivity extends AppCompatActivity {
 
         // Initialize views
         ImageView backButton = findViewById(R.id.backButton);
+        ImageView settingsButton = findViewById(R.id.settingsButton);
         RecyclerView rv = findViewById(R.id.recyclerHistory);
         TextView empty = findViewById(R.id.tvEmpty);
 
@@ -36,6 +37,9 @@ public class AlertHistoryActivity extends AppCompatActivity {
 
         // Back button click
         backButton.setOnClickListener(v -> finish());
+
+        settingsButton.setOnClickListener(v ->
+                startActivity(new Intent(this, SettingsActivity.class)));
 
         // Load data
         DatabaseHelper db = new DatabaseHelper(this);

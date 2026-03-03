@@ -32,6 +32,7 @@ public class SafetyGuideActivity extends AppCompatActivity {
 
     private TextView tabAll, tabFirstAid, tabFireSafety, tabDisaster;
     private ImageView backButton;
+    private ImageView settingsButton;
     private EditText searchEditText;
 
     @Override
@@ -47,6 +48,7 @@ public class SafetyGuideActivity extends AppCompatActivity {
 
     private void initializeViews() {
         backButton = findViewById(R.id.backButton);
+        settingsButton = findViewById(R.id.settingsButton);
         recyclerSafety = findViewById(R.id.recyclerSafety);
         searchEditText = findViewById(R.id.searchEditText);
 
@@ -210,6 +212,9 @@ public class SafetyGuideActivity extends AppCompatActivity {
 
     private void setupClickListeners() {
         backButton.setOnClickListener(v -> finish());
+
+        settingsButton.setOnClickListener(v ->
+                startActivity(new Intent(this, SettingsActivity.class)));
 
         tabAll.setOnClickListener(v -> {
             updateTabs(tabAll);

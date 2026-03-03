@@ -95,7 +95,7 @@ public class ViewContactsActivity extends AppCompatActivity {
     }
 
     private void openSettings() {
-        Toast.makeText(this, "Settings coming soon", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(this, SettingsActivity.class));
     }
 
     private void refreshContactList() {

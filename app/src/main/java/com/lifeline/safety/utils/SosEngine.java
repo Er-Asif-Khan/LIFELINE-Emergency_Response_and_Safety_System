@@ -67,12 +67,15 @@ public class SosEngine {
     private void prepareSmsIntentAndLog(List<String> phones, String locationLink, SosCallback callback){
         saveHistory(locationLink);
 
-        String message = "🚨 EMERGENCY ALERT!\nI need immediate help.\n";
+        String defaultMessage = "🚨 EMERGENCY ALERT!\nI need immediate help.\n";
+        android.content.SharedPreferences prefs =
+                context.getSharedPreferences("lifeline_prefs", android.content.Context.MODE_PRIVATE);
+        String message = prefs.getString("sos_message", defaultMessage);
 
         if (locationLink != null) {
-            message += "Location:\n" + locationLink;
+            message += "\nLocation:\n" + locationLink;
         } else {
-            message += "Location unavailable.";
+            message += "\nLocation unavailable.";
         }
 
         Intent intent = new Intent(Intent.ACTION_SENDTO);

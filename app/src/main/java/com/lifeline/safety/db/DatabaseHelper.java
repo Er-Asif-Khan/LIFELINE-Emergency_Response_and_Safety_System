@@ -122,4 +122,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return history;
     }
+
+    public void clearAlertHistory() {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(TABLE_HISTORY, null, null);
+    }
 }
